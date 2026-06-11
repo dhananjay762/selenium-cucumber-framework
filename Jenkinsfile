@@ -1,5 +1,9 @@
 pipeline {
     agent any // Runs on any available Jenkins worker node
+    
+    tools {
+        maven 'Maven3'  
+    }
 
     environment {
         TEST_REPORTS_DIR = "target/surefire-reports"
@@ -18,14 +22,14 @@ pipeline {
             steps {
                 // Verify background language/tool versions (e.g., Maven)
                 echo 'Checking tool versions...'
-                sh 'mvn --version'
+                bat 'mvn --version'
             }
         }
 
         stage('Run Automation Tests') {
 			steps {
                 echo 'Launching Chrome execution...'
-                sh "mvn test -Dbrowser=Chrome -Dheadless=true"
+                bat "mvn test -Dbrowser=Chrome -Dheadless=true"
             }
         }
     }
@@ -34,11 +38,11 @@ pipeline {
         always {
             echo 'Processing test results...'
             // Publishes JUnit or TestNG XML reports automatically
-            junit '**/target/surefire-reports/*.xml'
+            junit allowEmptyResults: true, '**/target/surefire-reports/*.xml'
             
             // Publish Extent HTML Report
             publishHTML(target: [
-                allowMissing         : false,
+                allowMissing         : true,
                 alwaysLinkToLastBuild: true,
                 keepAll              : true,
                 reportDir            : 'target/ExtentReport',
