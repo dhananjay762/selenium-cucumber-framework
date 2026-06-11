@@ -38,7 +38,7 @@ pipeline {
         always {
             echo 'Processing test results...'
             // Publishes JUnit or TestNG XML reports automatically
-            junit allowEmptyResults: true, '**/target/surefire-reports/*.xml'
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
             
             // Publish Extent HTML Report
             publishHTML(target: [
