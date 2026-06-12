@@ -4,6 +4,14 @@ pipeline {
     tools {
         maven 'Maven3'  
     }
+    
+    parameters {
+        choice(
+            name: 'BROWSER',
+            choices: ['Chrome', 'Firefox', 'Edge'],
+            description: 'Select the browser to run tests on'
+        )
+    }
 
     environment {
         TEST_REPORTS_DIR = "target/surefire-reports"
@@ -28,8 +36,8 @@ pipeline {
 
         stage('Run Automation Tests') {
 			steps {
-                echo 'Launching Chrome execution...'
-                bat "mvn test -Dbrowser=Chrome -Dheadless=true"
+                echo 'Launching ${params.BROWSER} execution...'
+                bat "mvn test -Dbrowser=${params.BROWSER} -Dheadless=true"
             }
         }
     }
@@ -53,7 +61,7 @@ pipeline {
             
             // Send email with report attached
             emailext(
-                subject: "Test Automation Report - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                subject: "Test Automation Report [${params.BROWSER}] - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
                 body: """
                     <html>
                         <body>
@@ -61,6 +69,7 @@ pipeline {
                             <table>
                                 <tr><td><b>Project:</b></td><td>${env.JOB_NAME}</td></tr>
                                 <tr><td><b>Build Number:</b></td><td>#${env.BUILD_NUMBER}</td></tr>
+                                <tr><td><b>Browser:</b></td><td>${params.BROWSER}</td></tr>
                                 <tr><td><b>Status:</b></td><td>${currentBuild.currentResult}</td></tr>
                                 <tr><td><b>Duration:</b></td><td>${currentBuild.durationString}</td></tr>
                                 <tr><td><b>Report URL:</b></td><td><a href="${env.BUILD_URL}Extent_20Test_20Report/">Click here to view report</a></td></tr>
