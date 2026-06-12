@@ -50,6 +50,32 @@ pipeline {
                 reportName           : 'Extent Test Report',
                 reportTitles         : 'Automation Test Report'
             ])
+            
+            // Send email with report attached
+            emailext(
+                subject: "Test Automation Report - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                body: """
+                    <html>
+                        <body>
+                            <h2>Test Automation Report</h2>
+                            <table>
+                                <tr><td><b>Project:</b></td><td>${env.JOB_NAME}</td></tr>
+                                <tr><td><b>Build Number:</b></td><td>#${env.BUILD_NUMBER}</td></tr>
+                                <tr><td><b>Status:</b></td><td>${currentBuild.currentResult}</td></tr>
+                                <tr><td><b>Duration:</b></td><td>${currentBuild.durationString}</td></tr>
+                                <tr><td><b>Report URL:</b></td><td><a href="${env.BUILD_URL}Extent_20Test_20Report/">Click here to view report</a></td></tr>
+                                <tr><td><b>Build URL:</b></td><td><a href="${env.BUILD_URL}">${env.BUILD_URL}</a></td></tr>
+                            </table>
+                            <br/>
+                            <p>Please find the attached Extent Report for this build.</p>
+                        </body>
+                    </html>
+                """,
+                to: 'dhananjay762@gmail.com',          // ← change to recipient email
+                from: 'dhananjay762@gmail.com',        // ← change to your sender email
+                mimeType: 'text/html',
+                attachmentsPattern: 'target/ExtentReport/TestAutomationReport.html'  // attaches the report
+            )
         }
         success {
             echo 'Automation tests completed successfully!'
