@@ -94,7 +94,7 @@ public class TestStepDef extends PageFactory{
 	
 	@Then("Order should be successfully placed")
 	public void order_should_be_successfully_placed() {
-		Assert.assertEquals(getElementText(getCheckoutPage().secondaryHeader), "Checkout: Complete!-123");
+		Assert.assertEquals(getElementText(getCheckoutPage().secondaryHeader), "Checkout: Complete!");
 		Assert.assertEquals(getElementText(getCheckoutPage().thankYouMsgHdr), 
 				"Thank you for your order!");
 	}
