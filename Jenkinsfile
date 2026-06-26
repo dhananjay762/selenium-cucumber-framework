@@ -61,11 +61,11 @@ pipeline {
             
             // Send email with report attached
             emailext(
-                subject: "Test Automation Report [${params.BROWSER}] - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                subject: "Selenium Test Automation Report [${params.BROWSER}] - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
                 body: """
                     <html>
                         <body>
-                            <h2>Test Automation Report</h2>
+                            <h2>Selenium Test Automation Report</h2>
                             <table>
                                 <tr><td><b>Project:</b></td><td>${env.JOB_NAME}</td></tr>
                                 <tr><td><b>Build Number:</b></td><td>#${env.BUILD_NUMBER}</td></tr>
